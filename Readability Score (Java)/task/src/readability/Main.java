@@ -10,20 +10,20 @@ public class Main {
         List<Integer> numberOfWordsSentences = new ArrayList<>();
         int wordsInSentenceCounter = 1;
         Scanner scanner = new Scanner(System.in);
-        String text = scanner.nextLine().trim();
-        for (char word : text.toCharArray()) {
-            if (word == ' ') {
+        String text = scanner.nextLine();
+        for (int i = 1; i < text.length(); i++) {
+            if (text.charAt(i) != ' ' && text.charAt(i - 1) == ' ') {
                 wordsInSentenceCounter++;
-            } else if (String.valueOf(word).matches(endSentenceCharacter)) {
+            } else if (String.valueOf(text.charAt(i)).matches(endSentenceCharacter)) {
                 numberOfWordsSentences.add(wordsInSentenceCounter);
-                wordsInSentenceCounter = 1;
+                wordsInSentenceCounter = 0;
             }
         }
         if (!text.matches(".*[.!?]$")) {
             numberOfWordsSentences.add(wordsInSentenceCounter);
         }
         int sumOfWords = numberOfWordsSentences.stream()
-                .mapToInt(Integer::intValue).sum() - 1;
+                .mapToInt(Integer::intValue).sum();
         double avgWordsInSentence = (double) sumOfWords / (double) numberOfWordsSentences.size();
         String output = (avgWordsInSentence >= 10.0) ? "HARD" : "EASY";
 
