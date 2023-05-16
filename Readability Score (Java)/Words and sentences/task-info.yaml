@@ -58,6 +58,18 @@ files:
 feedback_link: https://hyperskill.org/learn/step/5263#comment
 status: Failed
 feedback:
-  message: Failed to launch checking
-  time: "Thu, 11 May 2023 23:46:04 UTC"
+  message: |2
+
+    FAILURE: Build failed with an exception.
+
+    * What went wrong:
+    java.net.BindException: Address already in use: bind
+
+    * Try:
+    &gt; Run with --stacktrace option to get the stack trace.
+    &gt; Run with --info or --debug option to get more log output.
+    &gt; Run with --scan to get full insights.
+
+    * Get more help at https://help.gradle.org
+  time: "Tue, 16 May 2023 21:47:05 UTC"
 record: -1

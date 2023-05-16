@@ -2,7 +2,6 @@ package readability;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
 import java.util.Scanner;
 
 public class Main {
@@ -11,7 +10,7 @@ public class Main {
         List<Integer> numberOfWordsSentences = new ArrayList<>();
         int wordsInSentenceCounter = 1;
         Scanner scanner = new Scanner(System.in);
-        String text = scanner.nextLine();
+        String text = scanner.nextLine().trim();
         for (char word : text.toCharArray()) {
             if (word == ' ') {
                 wordsInSentenceCounter++;
@@ -23,9 +22,10 @@ public class Main {
         if (!text.matches(".*[.!?]$")) {
             numberOfWordsSentences.add(wordsInSentenceCounter);
         }
-        OptionalDouble avgWordsInSentence =  numberOfWordsSentences.stream()
-                .mapToInt(Integer::intValue).average() ;
-        String output = (avgWordsInSentence.orElse(0.0) >= 10.0) ? "HARD" : "EASY";
+        int sumOfWords = numberOfWordsSentences.stream()
+                .mapToInt(Integer::intValue).sum() - 1;
+        double avgWordsInSentence = (double) sumOfWords / (double) numberOfWordsSentences.size();
+        String output = (avgWordsInSentence >= 10.0) ? "HARD" : "EASY";
 
         System.out.print(output);
     }
