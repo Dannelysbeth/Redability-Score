@@ -25,8 +25,9 @@ public class Main {
         int sumOfWords = numberOfWordsSentences.stream()
                 .mapToInt(Integer::intValue).sum();
         double avgWordsInSentence = (double) sumOfWords / (double) numberOfWordsSentences.size();
-        String output = (avgWordsInSentence >= 10.0) ? "HARD" : "EASY";
+        String output = (avgWordsInSentence > 10.0) ? "HARD" : "EASY";
 
         System.out.print(output);
     }
+    //TODO exercise 3
 }
