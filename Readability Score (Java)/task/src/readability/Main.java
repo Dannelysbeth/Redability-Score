@@ -29,5 +29,5 @@ public class Main {
 
         System.out.print(output);
     }
-    //TODO exercise 3
+    //TODO exercise 3 b
 }
