@@ -2,54 +2,62 @@ package readability;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        File file = new File(args[0]);
-        FileReader fileReader =  new FileReader(file);
-        String text = fileReader.
+    public static void main(String[] args) {
+        String text = new String();
         String endSentenceCharacter = "[.!?]";
         int characters = 1;
         List<Integer> numberOfWordsSentences = new ArrayList<>();
         int wordsInSentenceCounter = 1;
-        Scanner scanner = new Scanner(System.in);
-//        String text = scanner.nextLine();
-        for (int i = 1; i < text.length(); i++) {
-            characters++;
-            if (text.charAt(i) != ' ' && text.charAt(i - 1) == ' ') {
-                wordsInSentenceCounter++;
-                characters--;
-            } else if (String.valueOf(text.charAt(i)).matches(endSentenceCharacter)) {
+        try {
+            File myObj = new File(args[0]);
+            Scanner myReader = new Scanner(myObj);
+
+            while (myReader.hasNextLine()) {
+                text = myReader.nextLine();
+            }
+            myReader.close();
+            for (int i = 1; i < text.length(); i++) {
+                characters++;
+                if (text.charAt(i) != ' ' && text.charAt(i - 1) == ' ') {
+                    wordsInSentenceCounter++;
+                    characters--;
+                } else if (String.valueOf(text.charAt(i)).matches(endSentenceCharacter)) {
+                    numberOfWordsSentences.add(wordsInSentenceCounter);
+                    characters--;
+                    wordsInSentenceCounter = 0;
+                } else if ((String.valueOf(text.charAt(i)).matches("[\n\t]"))) {
+                    characters--;
+                }
+            }
+            if (!text.matches(".*[.!?]$")) {
                 numberOfWordsSentences.add(wordsInSentenceCounter);
-                characters--;
-                wordsInSentenceCounter = 0;
-            } else if ((String.valueOf(text.charAt(i)).matches("[\n\t]"))) {
+            }
+            int sumOfWords = numberOfWordsSentences.stream()
+                    .mapToInt(Integer::intValue).sum();
+            double avgWordsInSentence = (double) sumOfWords / (double) numberOfWordsSentences.size();
+            characters += numberOfWordsSentences.size();
+            if (text.charAt(text.length()-1) != '.') {
                 characters--;
             }
-        }
-        if (!text.matches(".*[.!?]$")) {
-            numberOfWordsSentences.add(wordsInSentenceCounter);
-        }
-        int sumOfWords = numberOfWordsSentences.stream()
-                .mapToInt(Integer::intValue).sum();
-        double avgWordsInSentence = (double) sumOfWords / (double) numberOfWordsSentences.size();
-        characters += numberOfWordsSentences.size();
-        String output = (avgWordsInSentence > 10.0) ? "HARD" : "EASY";
+            String output = (avgWordsInSentence > 10.0) ? "HARD" : "EASY";
 
-        double score = countScore(characters, sumOfWords, numberOfWordsSentences.size());
-        String ageGroup = getAgeGroup(score);
-        System.out.printf("\nWords: %d", sumOfWords);
-        System.out.printf("\nSentences: %d", numberOfWordsSentences.size());
-        System.out.printf("\nCharacters: %d", characters);
-        System.out.printf("\nThe score is: %s", score);
-        System.out.printf("\nThis text should be understood by %s year-olds.", ageGroup);
-//        System.out.print(output);
+            double score = countScore(characters, sumOfWords, numberOfWordsSentences.size());
+            String ageGroup = getAgeGroup(score);
+            System.out.printf("\nWords: %d", sumOfWords);
+            System.out.printf("\nSentences: %d", numberOfWordsSentences.size());
+            System.out.printf("\nCharacters: %d", characters);
+            System.out.printf("\nThe score is: %s", score);
+            System.out.printf("\nThis text should be understood by %s year-olds.", ageGroup);
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     static double countScore(int characters, int words, int sentences) {
