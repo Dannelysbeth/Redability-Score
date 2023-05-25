@@ -1,17 +1,6 @@
 type: edu
 custom_name: Score!
 files:
-- name: src/readability/Main.java
-  visible: true
-  text: |
-    package readability;
-
-    public class Main {
-        public static void main(String[] args) {
-            System.out.print("Hello world!");
-        }
-    }
-  learner_created: false
 - name: test/ReadabilityTest.java
   visible: false
   text: |
@@ -211,6 +200,20 @@ files:
         }
     }
   learner_created: false
+- name: src/readability/Main.java
+  visible: true
+  text: |
+    package readability;
+
+    public class Main {
+        public static void main(String[] args) {
+            System.out.print("Hello world!");
+        }
+    }
+  learner_created: false
 feedback_link: https://hyperskill.org/learn/step/5264#comment
-status: Unchecked
+status: Failed
+feedback:
+  message: Failed to launch checking
+  time: "Tue, 23 May 2023 21:46:13 UTC"
 record: -1
