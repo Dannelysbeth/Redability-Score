@@ -14,6 +14,8 @@ public class Main {
         int characters = 1;
         List<Integer> numberOfWordsSentences = new ArrayList<>();
         int wordsInSentenceCounter = 1;
+        List<Character> word = new ArrayList<>();
+
         try {
             File myObj = new File(args[0]);
             Scanner myReader = new Scanner(myObj);
@@ -33,7 +35,9 @@ public class Main {
                     wordsInSentenceCounter = 0;
                 } else if ((String.valueOf(text.charAt(i)).matches("[\n\t]"))) {
                     characters--;
+                    word.clear();
                 }
+                word.add(text.charAt(i));
             }
             if (!text.matches(".*[.!?]$")) {
                 numberOfWordsSentences.add(wordsInSentenceCounter);
@@ -42,7 +46,7 @@ public class Main {
                     .mapToInt(Integer::intValue).sum();
             double avgWordsInSentence = (double) sumOfWords / (double) numberOfWordsSentences.size();
             characters += numberOfWordsSentences.size();
-            if (text.charAt(text.length()-1) != '.') {
+            if (text.charAt(text.length() - 1) != '.') {
                 characters--;
             }
             String output = (avgWordsInSentence > 10.0) ? "HARD" : "EASY";
@@ -97,6 +101,14 @@ public class Main {
             return "5-6";
         }
     }
+
+    public static void checkHowManySyllables(String word) {
+        for (int i = 0; i < word.length(); i++) {
+
+        }
+    }
+
+    public static void addSylla
 
 
 }
