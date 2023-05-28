@@ -211,6 +211,9 @@ files:
         }
     }
   learner_created: false
+- name: src/readability/array.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5264#comment
 status: Failed
 feedback:

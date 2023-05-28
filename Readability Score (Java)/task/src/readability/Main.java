@@ -105,7 +105,9 @@ public class Main {
     public static void checkHowManySyllables(String word) {
         int syllables = 0;
         for (int i = 0; i < word.length(); i++) {
-            if (word.charAt(i).)
+            if (word.charAt(i) == 'a'){
+                //TO DO
+            }
         }
     }
 
