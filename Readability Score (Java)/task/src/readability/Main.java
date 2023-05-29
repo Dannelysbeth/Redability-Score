@@ -13,6 +13,8 @@ public class Main {
         String endSentenceCharacter = "[.!?]";
         int characters = 1;
         List<Integer> numberOfWordsSentences = new ArrayList<>();
+        int polysyllablesCounter = 0;
+        int syllablesCounter = 0;
         int wordsInSentenceCounter = 1;
         List<Character> word = new ArrayList<>();
 
@@ -29,13 +31,20 @@ public class Main {
                 if (text.charAt(i) != ' ' && text.charAt(i - 1) == ' ') {
                     wordsInSentenceCounter++;
                     characters--;
+                    syllablesCounter += getSyllablesInWord(word.toString());
+                    polysyllablesCounter = isPolysyllable(word.toString()) ? polysyllablesCounter++ : polysyllablesCounter;
                 } else if (String.valueOf(text.charAt(i)).matches(endSentenceCharacter)) {
                     numberOfWordsSentences.add(wordsInSentenceCounter);
                     characters--;
                     wordsInSentenceCounter = 0;
+                    syllablesCounter += getSyllablesInWord(word.toString());
+                    polysyllablesCounter = isPolysyllable(word.toString()) ? polysyllablesCounter++ : polysyllablesCounter;
                 } else if ((String.valueOf(text.charAt(i)).matches("[\n\t]"))) {
                     characters--;
+                    syllablesCounter += getSyllablesInWord(word.toString());
+                    polysyllablesCounter = isPolysyllable(word.toString()) ? polysyllablesCounter++ : polysyllablesCounter;
                     word.clear();
+
                 }
                 word.add(text.charAt(i));
             }
@@ -102,16 +111,20 @@ public class Main {
         }
     }
 
-    public static void checkHowManySyllables(String word) {
-        int syllables = 0;
-        for (int i = 0; i < word.length(); i++) {
-            if (word.charAt(i) == 'a'){
-                //TO DO
+    public static int getSyllablesInWord(String word) {
+        String vowels = "[aeiouy]";
+        int syllables = String.valueOf(word.charAt(0)).matches(vowels) ? 1 : 0;
+        for (int i = 1; i < word.length(); i++) {
+            if (String.valueOf(word.charAt(i)).matches(vowels) && !String.valueOf(word.charAt(i - 1)).matches(vowels)) {
+                syllables++;
             }
         }
+        return syllables == 0 ? 1 : syllables;
     }
 
-    public static void addSylla
+    public static boolean isPolysyllable(String word) {
+        return getSyllablesInWord(word) > 2 ? true: false;
+    }
 
 
 }

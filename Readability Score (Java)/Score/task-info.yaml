@@ -211,12 +211,6 @@ files:
         }
     }
   learner_created: false
-- name: src/readability/array.java
-  visible: true
-  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5264#comment
-status: Failed
-feedback:
-  message: Failed to launch checking
-  time: "Tue, 23 May 2023 21:46:13 UTC"
+status: Solved
 record: -1
