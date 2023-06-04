@@ -12,16 +12,32 @@ class TestClue {
     int words;
     int sentences;
     int characters;
+    int syllables;
+    int polysyllables;
 
-    double score;
-    String age;
+    double ari;
+    double fkri;
+    double smog;
+    double cli;
 
-    TestClue(int words, int chars, int sentences, double score, String age) {
+    TestClue(int words,
+             int chars,
+             int sentences,
+             int syllables,
+             int polysyllables,
+             double ari,
+             double fkri,
+             double smog,
+             double cli) {
         this.words = words;
         this.sentences = sentences;
         this.characters = chars;
-        this.score = score;
-        this.age = age;
+        this.syllables = syllables;
+        this.polysyllables = polysyllables;
+        this.ari = ari;
+        this.fkri = fkri;
+        this.smog = smog;
+        this.cli = cli;
     }
 }
 
@@ -35,8 +51,12 @@ public class ReadabilityTest extends StageTest<TestClue> {
                 108,
                 580,
                 6,
+                196,
+                20,
                 12.86,
-                "17-18"))
+                12.84,
+                13.56,
+                14.13))
                 .addFile("input.txt",
                     "Readability is " +
                         "the ease with which a reader can " +
@@ -54,33 +74,48 @@ public class ReadabilityTest extends StageTest<TestClue> {
                         "In readers with poor reading comprehension, raising " +
                         "the readability level of a text from mediocre to good " +
                         "can make the difference between success and failure")
-                .addArguments("input.txt"),
+                .addArguments("input.txt")
+                .setInput("all"),
 
             new TestCase<TestClue>().setAttach(new TestClue(
-                100,
-                476,
-                10,
-                5.98,
-                "10-11"))
+                137,
+                687,
+                14,
+                210,
+                17,
+                7.08,
+                6.31,
+                9.42,
+                10.66))
                 .addFile("in.txt",
-                    "This is the page of the Simple English Wikipedia. " +
-                        "A place where people work together to write encyclopedias " +
-                        "in different languages. That includes children and adults " +
-                        "who are learning English. There are 142,262 articles on the " +
-                        "Simple English Wikipedia. All of the pages are free to use. " +
-                        "They have all been published under both the Creative Commons" +
-                        " License 3 and the GNU Free Documentation License. " +
-                        "You can help here! You may change these pages and make new " +
-                        "pages. Read the help pages and other good pages to learn " +
-                        "how to write pages here. You may ask questions at Simple talk.")
-                .addArguments("in.txt"),
+                    "This is the front page of the Simple English " +
+                        "Wikipedia. Wikipedias are places where people work " +
+                        "together to write encyclopedias in different languages. " +
+                        "We use Simple English words and grammar here. The Simple " +
+                        "English Wikipedia is for everyone! That includes children " +
+                        "and adults who are learning English. There are 142,262 " +
+                        "articles on the Simple English Wikipedia. All of the pages " +
+                        "are free to use. They have all been published under both " +
+                        "the Creative Commons License " +
+                        "and the GNU Free Documentation License. You can help here! " +
+                        "You may change these pages and make new pages. Read the help " +
+                        "pages and other good pages to learn how to write pages here. " +
+                        "If you need help, you may ask questions at Simple talk. Use " +
+                        "Basic English vocabulary and shorter sentences. This allows " +
+                        "people to understand normally complex terms or phrases.")
+                .addArguments("in.txt")
+                .setInput("all"),
 
             new TestCase<TestClue>().setAttach(new TestClue(
                 180,
                 982,
                 13,
+                317,
+                34,
                 11.19,
-                "16-17"))
+                10.59,
+                12.37,
+                14.14))
                 .addFile("in.txt",
                     "Gothic architecture are building designs, " +
                         "as first pioneered in Western Europe in the Middle Ages. " +
@@ -90,8 +125,8 @@ public class ReadabilityTest extends StageTest<TestClue> {
                         "architecture had become popular. The important features " +
                         "of Gothic architecture are the pointed arch, the ribbed " +
                         "vault, the flying buttress, and stained glass windows " +
-                        "which are explained below. Gothic architecture is best " +
-                        "known as the style of many " +
+                        "which are explained below. " +
+                        "Gothic architecture is best known as the style of many " +
                         "of the great cathedrals, abbeys and churches of Europe. " +
                         "It is also the architecture of many castles, palaces, " +
                         "town halls, universities, and also some houses. " +
@@ -105,6 +140,7 @@ public class ReadabilityTest extends StageTest<TestClue> {
                         "again, particularly for building churches and universities. " +
                         "This style is called Gothic Revival architecture.")
                 .addArguments("in.txt")
+                .setInput("all")
         );
     }
 
@@ -116,78 +152,256 @@ public class ReadabilityTest extends StageTest<TestClue> {
         boolean foundWords = false;
         boolean foundSentences = false;
         boolean foundChars = false;
-        boolean foundScore = false;
-        boolean foundAge = false;
+        boolean foundSyllables = false;
+        boolean foundPolysyllables = false;
+
+        boolean foundARI = false;
+        boolean foundFKT = false;
+        boolean foundSMG = false;
+        boolean foundCLI = false;
 
         for (Object lineObj : reply.lines().toArray()) {
-            String line = (String) lineObj;
-            line = line.toLowerCase();
+            String initialLine = (String) lineObj;
+            String line = initialLine.toLowerCase();
             if (line.contains("words:")) {
-                foundWords = true;
-                if (!line.contains(String.valueOf(clue.words))) {
-                    return new CheckResult(false, "Wrong number of words");
-                }
-            }
-            if (line.contains("sentences:")) {
-                foundSentences = true;
-                if (!line.contains(String.valueOf(clue.sentences))) {
-                    return new CheckResult(false, "Wrong number of sentences");
-                }
-            }
-            if (line.contains("characters:")) {
-                foundChars = true;
-                if (!line.contains(String.valueOf(clue.characters))) {
-                    return new CheckResult(false, "Wrong number of characters");
-                }
-            }
-            if (line.contains("score is:")) {
 
-                CheckResult wrongAnswer = new CheckResult(false, "Can't parse the score!" +
+                CheckResult wrongAnswer = new CheckResult(false, "Can't parse words count!" +
                     "\nYour output format should be like in examples.");
-                foundScore = true;
+                foundWords = true;
 
                 String[] parsedLine = line.split(":");
                 if (parsedLine.length != 2) {
                     return wrongAnswer;
                 }
 
-                double actualScore;
+                int words;
                 try {
-                    actualScore = Double.parseDouble(parsedLine[1].trim());
+                    words = (int) Double.parseDouble(parsedLine[1].strip());
                 } catch (NumberFormatException ignored) {
                     return wrongAnswer;
                 }
 
-                if (abs(actualScore - clue.score) > 0.2) {
-                    return new CheckResult(false, "Wrong score");
+                if (abs(words - clue.words) > 5) {
+                    return new CheckResult(false,
+                        "Wrong number of words. " +
+                            "Should be " + clue.words + ", but found " + words);
                 }
             }
-            if (line.contains("year") && line.contains("old")) {
-                foundAge = true;
-                if (!line.contains(clue.age)) {
-                    return new CheckResult(false, "Wrong age");
+            if (line.contains("sentences:")) {
+
+                CheckResult wrongAnswer = new CheckResult(false, "Can't parse sentences count!" +
+                    "\nYour output format should be like in examples.");
+                foundSentences = true;
+
+                String[] parsedLine = line.split(":");
+                if (parsedLine.length != 2) {
+                    return wrongAnswer;
+                }
+
+                int sentences;
+                try {
+                    sentences = (int) Double.parseDouble(parsedLine[1].strip());
+                } catch (NumberFormatException ignored) {
+                    return wrongAnswer;
+                }
+
+                if (abs(sentences - clue.sentences) > 1) {
+                    return new CheckResult(false,
+                        "Wrong number of sentences. " +
+                            "Should be " + clue.sentences + ", but found " + sentences);
+                }
+            }
+            if (line.contains("characters:")) {
+
+                CheckResult wrongAnswer = new CheckResult(false, "Can't parse characters count!" +
+                    "\nYour output format should be like in examples.");
+                foundChars = true;
+
+                String[] parsedLine = line.split(":");
+                if (parsedLine.length != 2) {
+                    return wrongAnswer;
+                }
+
+                int characters;
+                try {
+                    characters = (int) Double.parseDouble(parsedLine[1].strip());
+                } catch (NumberFormatException ignored) {
+                    return wrongAnswer;
+                }
+
+                if (abs(characters - clue.characters) > 10) {
+                    return new CheckResult(false,
+                        "Wrong number of characters. " +
+                            "Should be " + clue.characters + ", but found " + characters);
+                }
+            }
+            if (line.contains("polysyllables:")) {
+
+                CheckResult wrongAnswer = new CheckResult(false, "Can't parse polysyllables count!" +
+                    "\nYour output format should be like in examples.");
+                foundPolysyllables = true;
+
+                String[] parsedLine = line.split(":");
+                if (parsedLine.length != 2) {
+                    return wrongAnswer;
+                }
+
+                int polysyllables;
+                try {
+                    polysyllables = (int) Double.parseDouble(parsedLine[1].trim());
+                } catch (NumberFormatException ignored) {
+                    return wrongAnswer;
+                }
+
+                if (abs(polysyllables - clue.polysyllables) > 5) {
+                    return wrongAnswer;
+                }
+
+            } else if (line.contains("syllables:")) {
+
+                CheckResult wrongAnswer = new CheckResult(false, "Can't parse syllables count!" +
+                    "\nYour output format should be like in examples.");
+                foundSyllables = true;
+
+                String[] parsedLine = line.split(":");
+                if (parsedLine.length != 2) {
+                    return wrongAnswer;
+                }
+
+                int syllables;
+                try {
+                    syllables = (int) Double.parseDouble(parsedLine[1].strip());
+                } catch (NumberFormatException ignored) {
+                    return wrongAnswer;
+                }
+
+                if (abs(syllables - clue.syllables) > 20) {
+                    return new CheckResult(false,
+                        "Wrong number of syllables. " +
+                            "Should be " + clue.syllables + ", but found " + syllables);
+                }
+            }
+
+            if (line.startsWith("automated readability index")) {
+                foundARI = true;
+                int rounded = (int) clue.ari;
+                String actual = Integer.toString(rounded);
+                String before = Integer.toString(rounded - 1);
+                String after = Integer.toString(rounded + 1);
+                if (!(line.contains(actual)
+                    || line.contains(before)
+                    || line.contains(after))) {
+                    return new CheckResult(false,
+                        "Wrong Automated Readability Index score. " +
+                            "Should be around " + clue.ari + ", your output:\n" + initialLine);
+                }
+                if (!line.contains("year") && !line.contains("old")) {
+                    return new CheckResult(false,
+                        "No age in Automated Readability Index");
+                }
+            }
+
+            if (line.startsWith("flesch-kincaid")) {
+                foundFKT = true;
+                int rounded = (int) clue.fkri;
+                String actual = Integer.toString(rounded);
+                String before = Integer.toString(rounded - 1);
+                String after = Integer.toString(rounded + 1);
+                if (!(line.contains(actual)
+                    || line.contains(before)
+                    || line.contains(after))) {
+                    return new CheckResult(false,
+                        "Wrong Flesch-Kincaid score. " +
+                            "Should be around " + clue.fkri + ", your output:\n" + initialLine);
+                }
+                if (!line.contains("year") && !line.contains("old")) {
+                    return new CheckResult(false,
+                        "No age in Flesch-Kincaid");
+                }
+            }
+
+            if (line.startsWith("simple measure of gobbledygook")) {
+                foundSMG = true;
+                int rounded = (int) clue.smog;
+                String actual = Integer.toString(rounded);
+                String before = Integer.toString(rounded - 1);
+                String after = Integer.toString(rounded + 1);
+                if (!(line.contains(actual)
+                    || line.contains(before)
+                    || line.contains(after))) {
+                    return new CheckResult(false,
+                        "Wrong Simple Measure of Gobbledygook score. " +
+                            "Should be around " + clue.smog + ", your output:\n" + initialLine);
+                }
+                if (!line.contains("year") && !line.contains("old")) {
+                    return new CheckResult(false,
+                        "No age in Simple Measure of Gobbledygook");
+                }
+            }
+
+            if (line.startsWith("coleman-liau")) {
+                foundCLI = true;
+                int rounded = (int) clue.cli;
+                String actual = Integer.toString(rounded);
+                String before = Integer.toString(rounded - 1);
+                String after = Integer.toString(rounded + 1);
+                if (!(line.contains(actual)
+                    || line.contains(before)
+                    || line.contains(after))) {
+                    return new CheckResult(false,
+                        "Wrong Coleman-Liau score. " +
+                            "Should be around " + clue.cli + ", your output:\n" + initialLine);
+                }
+                if (!line.contains("year") && !line.contains("old")) {
+                    return new CheckResult(false,
+                        "No age in Coleman-Liau");
                 }
             }
         }
 
         if (!foundWords) {
-            return new CheckResult(false, "There is no words amount");
+            return new CheckResult(false,
+                "There is no words amount");
         }
 
         if (!foundSentences) {
-            return new CheckResult(false, "There is no sentences amount");
+            return new CheckResult(false,
+                "There is no sentences amount");
         }
 
         if (!foundChars) {
-            return new CheckResult(false, "There is no characters amount");
+            return new CheckResult(false,
+                "There is no characters amount");
         }
 
-        if (!foundScore) {
-            return new CheckResult(false, "There is no score in output");
+        if (!foundSyllables) {
+            return new CheckResult(false,
+                "There is no syllables in output");
         }
 
-        if (!foundAge) {
-            return new CheckResult(false, "There is no age in output");
+        if (!foundPolysyllables) {
+            return new CheckResult(false,
+                "There is no polysyllables in output");
+        }
+
+        if (!foundARI) {
+            return new CheckResult(false,
+                "There is no Automated Readability Index in output");
+        }
+
+        if (!foundFKT) {
+            return new CheckResult(false,
+                "There is no Flesch-Kincaid readability tests in output");
+        }
+
+        if (!foundSMG) {
+            return new CheckResult(false,
+                "There is no Simple Measure of Gobbledygook in output");
+        }
+
+        if (!foundCLI) {
+            return new CheckResult(false,
+                "There is no Coleman-Liau index in output");
         }
 
         return CheckResult.correct();
