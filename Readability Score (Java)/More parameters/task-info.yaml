@@ -425,18 +425,9 @@ files:
     }
   learner_created: false
 feedback_link: https://hyperskill.org/learn/step/5265#comment
-status: Failed
+status: Solved
 feedback:
-  message: "Exception in test #1\n\njava.util.IllegalFormatConversionException: d\
-    \ != java.lang.Double\n\tat java.base/java.util.Formatter$FormatSpecifier.failConversion(Formatter.java:4442)\n\
-    \tat java.base/java.util.Formatter$FormatSpecifier.printInteger(Formatter.java:2963)\n\
-    \tat java.base/java.util.Formatter$FormatSpecifier.print(Formatter.java:2918)\n\
-    \tat java.base/java.util.Formatter.format(Formatter.java:2689)\n\tat java.base/java.io.PrintStream.format(PrintStream.java:1209)\n\
-    \tat java.base/java.io.PrintStream.printf(PrintStream.java:1105)\n\tat readability.Main.main(Main.java:101)\n\
-    \nPlease find below the output of your program during this failed test.\nNote\
-    \ that the &#39;&gt;&#39; character indicates the beginning of the input line.\n\
-    \n---\n\nArguments: input.txt\n\nWords: 108\nSentences: 6\nCharacters: 580\nSyllables:\
-    \ 13435\nPolysyllables: 0Enter the score you want to calculate (ARI, FK, SMOG,\
-    \ CL, all): all\n&gt; all\nAutomated Readability Index:"
-  time: "Sun, 04 Jun 2023 13:09:50 UTC"
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Tue, 06 Jun 2023 23:06:24 UTC"
 record: -1
